@@ -86,21 +86,42 @@ void wersja_2(vector<int>tab, int M) {
     }
 }
 
+string plik_wejsciowy = "dane.txt";
+string plik_wyjsciowy = "wyniki.txt";
+
+void wczytaj_zapisz_do_pliku() {
+    cout << "test";
+}
+
+
+//Dane do testowania
+vector<int>tab1={-5,6,1,2,5,1,2,1,2,4};
+vector<int>tab2={};
+vector<int>tab3={1,2,3,1,2,3,1,2,3};
+vector<int>tab4={2,2,2,2,2,2,2,2};
+
+int M=6;
+
+//Funkcja testujaca wersje 1 algorytmu
+void testy_wersji_1() {
+    wersja_1(tab1, M);
+    wersja_1(tab2, M);
+    wersja_1(tab3, M);
+    wersja_1(tab4, M);
+}
+
+//Funkcja testujaca wersje 2 algorytmu
+void testy_wersji_2() {
+    wersja_2(tab1, M);
+    wersja_2(tab2, M);
+    wersja_2(tab3, M);
+    wersja_2(tab4, M);
+}
 
 int main()
 {
-    vector<int>tab1={-5,6,1,2,5,1,2,1,2,4};
-    vector<int>tab2={};
-    vector<int>tab3={1,2,3,1,2,3,1,2,3};
-    vector<int>tab4={2,2,2,2,2,2,2,2};
-    int M = 6;
-    wersja_1(tab1, M);
-    wersja_2(tab1, M);
-    wersja_1(tab2, M);
-    wersja_2(tab2, M);
-    wersja_1(tab3, M);
-    wersja_2(tab3, M);
-    wersja_1(tab4, M);
-    wersja_2(tab4, M);
+    testy_wersji_1();
+    testy_wersji_2();
+    wczytaj_zapisz_do_pliku(plik_wejsciowy, plik_wyjsciowy);
     return 0;
 }
