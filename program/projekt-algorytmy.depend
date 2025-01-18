@@ -1,6 +1,8 @@
 # depslib dependency file v1.0
-1737239561 source:c:\users\luszc\projekt-algorytmy\kacper-luszcz-179952-gr5\program\main.cpp
+1737243655 source:c:\users\luszc\projekt-algorytmy\kacper-luszcz-179952-gr5\program\main.cpp
 	<iostream>
 	<vector>
 	<unordered_set>
+	<fstream>
+	<sstream>
 
