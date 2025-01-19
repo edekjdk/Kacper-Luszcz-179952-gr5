@@ -1,8 +1,11 @@
 # depslib dependency file v1.0
-1737274541 source:c:\users\luszc\projekt-algorytmy\kacper-luszcz-179952-gr5\program\main.cpp
+1737281330 source:c:\users\luszc\projekt-algorytmy\kacper-luszcz-179952-gr5\program\main.cpp
 	<iostream>
 	<vector>
 	<unordered_set>
 	<fstream>
 	<sstream>
+	<chrono>
+	<cstdlib>
+	<iomanip>
 

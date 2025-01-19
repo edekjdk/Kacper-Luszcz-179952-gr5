@@ -78,7 +78,7 @@ void wersja_1(vector<int>tab, int M, bool sprawdz_unikalnosc) {
                 }
             }
         }
-    //wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n); // wyswietlamy wyniki i zapisujemy do pliku
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
@@ -121,7 +121,7 @@ void wersja_2(vector<int>tab, int M, bool sprawdz_unikalnosc) {
                 widziane.insert(tab[j]); //dodajemy napotkana liczbe do zbioru widziane
             }
         }
-    //wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n); // wyswietlamy wyniki i zapisujemy do pliku
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
@@ -202,10 +202,11 @@ vector<int> generuj_tablice(int n, int min_val, int max_val) {
 }
 
 // Funkcja generująca tabelkę wyników
-void generuj_tabelke(vector<int> rozmiary_n, int min_val, int max_val, int M) {
+void generuj_tabelke() {
     cout << setw(4) << "L.p." << setw(10) << "n" << setw(15) << "t1 [s]" << setw(15) << "t2 [s]" << endl;
     cout << string(44, '-') << endl;
-
+    vector<int> rozmiary_n = {250, 500, 750, 1000, 1250, 1500, 1750, 2000};
+    int min_val = -10, max_val = 10, M = 6;
     for (size_t i = 0; i < rozmiary_n.size(); ++i) {
         int n = rozmiary_n[i];
         vector<int> tab = generuj_tablice(n, min_val, max_val);
@@ -235,15 +236,10 @@ void generuj_tabelke(vector<int> rozmiary_n, int min_val, int max_val, int M) {
 
 int main()
 {
-    //testy_wersji_1();
-    //testy_wersji_2();
-    //wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
-
-    vector<int> rozmiary_n = {250, 500, 750, 1000, 1250, 1500, 1750, 2000};
-
-    // Generowanie tabelki wyników
-    int min_val = -10, max_val = 10, M = 6;
-    generuj_tabelke(rozmiary_n, min_val, max_val, M);
+    testy_wersji_1();
+    testy_wersji_2();
+    wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+    //generuj_tabelke();
 
     return 0;
 }
