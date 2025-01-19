@@ -6,12 +6,13 @@
 
 using namespace std;
 
-string plik_wejsciowy = "dane.txt";
-string plik_wyjsciowy = "wyniki.txt";
+string plik_wejsciowy = "dane.txt"; //plik wejsciowy
+string plik_wyjsciowy = "wyniki.txt"; //plik wyjsciowy
 
 
+//funkcja wyswietlajaca wyniki w konsoli oraz zapisujaca je do pliku wyjsciowego
 void wyswietl_wyniki_i_zapisz(vector<vector<int>>wyniki, int l_trojek, int wersja, int n) {
-    static bool czy_pliku_czyszczono = false; // Flaga do jednorazowego czyszczenia pliku
+    static bool czy_pliku_czyszczono = false; // Flaga do jednorazowego czyszczenia pliku, tylko raz po kompilacji
     if (!czy_pliku_czyszczono) {
         ofstream plik_czyszczenie(plik_wyjsciowy, ios::trunc);
         plik_czyszczenie.close();
@@ -21,8 +22,8 @@ void wyswietl_wyniki_i_zapisz(vector<vector<int>>wyniki, int l_trojek, int wersj
 
     ofstream plik(plik_wyjsciowy, ios::app);
         if(plik.is_open()) {
-        cout<< "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
-        plik << "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": ";
+        cout<< "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki w konsoli
+        plik << "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": "; //zapisujemy wyniki do pliku
         for(int i=0; i<wyniki.size(); i++) {
             cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
             plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
@@ -41,7 +42,7 @@ void wyswietl_wyniki_i_zapisz(vector<vector<int>>wyniki, int l_trojek, int wersj
         }
 }
 
-
+//pierwsza wersja algorytmu
 void wersja_1(vector<int>tab, int M, bool sprawdz_unikalnosc) {
     vector<vector<int>> wyniki; //wektor przechowywujacy znalezione trojki
     int n = tab.size(); // dlugosc tablicy poczatkowej
@@ -76,25 +77,26 @@ void wersja_1(vector<int>tab, int M, bool sprawdz_unikalnosc) {
                 }
             }
         }
-    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n);
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
+//druga wersja algorytmu
 void wersja_2(vector<int>tab, int M, bool sprawdz_unikalnosc) {
-    vector<vector<int>> wyniki;
-    int n = tab.size();
-    int l_trojek = 0;
+    vector<vector<int>> wyniki; //wektor przechowywujacy znalezione trojki
+    int n = tab.size(); // dlugosc tablicy poczatkowej
+    int l_trojek = 0; // zmienna do liczenia wystpien odpowiednich trojek
     int wersja = 2;
 
     if (n >=3) {
         for(int i=0; i<n-1; i++) {
-            unordered_set<int> widziane;
+            unordered_set<int> widziane; //zbior do przechowywania napotkanych juz liczb
 
             for(int j=i+1; j<n; j++) {
                 int x = M - tab[i] - tab[j];
 
-                if(widziane.find(x) != widziane.end()) {
-                    vector<int> trojka = {tab[i], x, tab[j]};
+                if(widziane.find(x) != widziane.end()) { //sprawdzamy, czy x znajduje sie w widziane
+                    vector<int> trojka = {tab[i], x, tab[j]}; //tworzymy trojke
 
                     if(sprawdz_unikalnosc) {
 
@@ -108,20 +110,21 @@ void wersja_2(vector<int>tab, int M, bool sprawdz_unikalnosc) {
 
                     if(unikalna) {
                         wyniki.push_back(trojka); //dodajemy jesli trojka jest unikalna
-                        l_trojek++; //
+                        l_trojek++; //zwiekszamy licznik trojek
                     }
                     } else {
                         wyniki.push_back(trojka);
                         l_trojek++;
                     }
                 }
-                widziane.insert(tab[j]);
+                widziane.insert(tab[j]); //dodajemy napotkana liczbe do zbioru widziane
             }
         }
-    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n);
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
+//funkcja wczytujaca dane z pliku
 void wczytaj_z_pliku(string plik_wejsciowy) {
     ifstream wejscie(plik_wejsciowy);
 
@@ -149,6 +152,8 @@ void wczytaj_z_pliku(string plik_wejsciowy) {
         // Wczytaj wartosc M
         if (!getline(wejscie, linia)) break;
         M = stoi(linia);
+
+        //wywolujemy funkcje dla danych z pliku
         bool sprawdz_unikalnosc=false;
         wersja_1(tab, M, sprawdz_unikalnosc);
         wersja_2(tab, M, sprawdz_unikalnosc);
@@ -159,16 +164,13 @@ void wczytaj_z_pliku(string plik_wejsciowy) {
 
 }
 
-
-
-
-
 //Dane do testowania
 vector<int>tab1={-5,6,1,2,5,1,2,1,2,4};
 vector<int>tab2={};
 vector<int>tab3={1,2,3,1,2,3,1,2,3};
 vector<int>tab4={2,2,2,2,2,2,2,2};
 
+//Szukana suma
 int M=6;
 
 //Funkcja testujaca wersje 1 algorytmu
@@ -193,7 +195,7 @@ int main()
 {
     testy_wersji_1();
     testy_wersji_2();
-    //wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+    wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
 
     return 0;
 }
