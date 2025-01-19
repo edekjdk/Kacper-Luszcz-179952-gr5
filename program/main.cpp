@@ -3,12 +3,13 @@
 #include <unordered_set>
 #include <fstream>
 #include <sstream>
-
+#include <chrono>
+#include <cstdlib>
+#include <iomanip>
 using namespace std;
 
 string plik_wejsciowy = "dane.txt"; //plik wejsciowy
 string plik_wyjsciowy = "wyniki.txt"; //plik wyjsciowy
-
 
 //funkcja wyswietlajaca wyniki w konsoli oraz zapisujaca je do pliku wyjsciowego
 void wyswietl_wyniki_i_zapisz(vector<vector<int>>wyniki, int l_trojek, int wersja, int n) {
@@ -77,7 +78,7 @@ void wersja_1(vector<int>tab, int M, bool sprawdz_unikalnosc) {
                 }
             }
         }
-    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n); // wyswietlamy wyniki i zapisujemy do pliku
+    //wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
@@ -120,7 +121,7 @@ void wersja_2(vector<int>tab, int M, bool sprawdz_unikalnosc) {
                 widziane.insert(tab[j]); //dodajemy napotkana liczbe do zbioru widziane
             }
         }
-    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n); // wyswietlamy wyniki i zapisujemy do pliku
+    //wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n); // wyswietlamy wyniki i zapisujemy do pliku
     }
 }
 
@@ -191,11 +192,58 @@ void testy_wersji_2() {
     wersja_2(tab4, M, sprawdz_unikalnosc);
 }
 
+
+vector<int> generuj_tablice(int n, int min_val, int max_val) {
+    vector<int> tab;
+    for (int i = 0; i < n; ++i) {
+        tab.push_back(min_val + rand() % (max_val - min_val + 1));
+    }
+    return tab;
+}
+
+// Funkcja generująca tabelkę wyników
+void generuj_tabelke(vector<int> rozmiary_n, int min_val, int max_val, int M) {
+    cout << setw(4) << "L.p." << setw(10) << "n" << setw(15) << "t1 [s]" << setw(15) << "t2 [s]" << endl;
+    cout << string(44, '-') << endl;
+
+    for (size_t i = 0; i < rozmiary_n.size(); ++i) {
+        int n = rozmiary_n[i];
+        vector<int> tab = generuj_tablice(n, min_val, max_val);
+
+        bool sprawdz_unikalnosc=false;
+
+        // Mierzenie czasu dla wersja_1
+        auto start1 = chrono::high_resolution_clock::now();
+        wersja_1(tab, M, sprawdz_unikalnosc); // Zakładamy, że wersja_1 jest poprawnie zaimplementowana
+        auto end1 = chrono::high_resolution_clock::now();
+        chrono::duration<double> czas1 = end1 - start1;
+
+        // Mierzenie czasu dla wersja_2
+        auto start2 = chrono::high_resolution_clock::now();
+        wersja_2(tab, M, sprawdz_unikalnosc); // Zakładamy, że wersja_2 jest poprawnie zaimplementowana
+        auto end2 = chrono::high_resolution_clock::now();
+        chrono::duration<double> czas2 = end2 - start2;
+
+        // Wypisanie wyników
+        cout << setw(4) << i + 1
+             << setw(10) << n
+             << setw(15) << fixed << setprecision(6) << czas1.count()
+             << setw(15) << fixed << setprecision(6) << czas2.count() << endl;
+    }
+}
+
+
 int main()
 {
-    testy_wersji_1();
-    testy_wersji_2();
-    wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+    //testy_wersji_1();
+    //testy_wersji_2();
+    //wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+
+    vector<int> rozmiary_n = {250, 500, 750, 1000, 1250, 1500, 1750, 2000};
+
+    // Generowanie tabelki wyników
+    int min_val = -10, max_val = 10, M = 6;
+    generuj_tabelke(rozmiary_n, min_val, max_val, M);
 
     return 0;
 }
