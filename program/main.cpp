@@ -91,27 +91,22 @@ void wersja_2(vector<int>tab, int M) {
 string plik_wejsciowy = "dane.txt";
 string plik_wyjsciowy = "wyniki.txt";
 
-void wczytaj_zapisz_do_pliku(const string& plik_we, const string& plik_wy, int wersja) {
-    ifstream wejscie(plik_we);
-    ofstream wyjscie(plik_wy, ios::app);
+void wczytaj_z_pliku(string plik_wejsciowy) {
+    ifstream wejscie(plik_wejsciowy);
 
     if (!wejscie.is_open()) {
-        cerr << "Nie mo¿na otworzyæ pliku wejœciowego!" << endl;
-        return;
-    }
-    if (!wyjscie.is_open()) {
-        cerr << "Nie mo¿na otworzyæ pliku wyjœciowego!" << endl;
+        cout << "Nie mozna otworzyc pliku wejsciowego!" << endl;
         return;
     }
 
     vector<int> tab; // Tablica do przechowywania liczb
-    int M;           // Wartoœæ M
-    int zestaw_numer = 1; // Numer aktualnego zestawu danych
+    int M;           // Wartoœæ
+    int zestaw_numer = 1;
 
     while (true) {
         tab.clear();
 
-        // Wczytaj tablicê liczb
+        // Wczytaj tablice liczb
         string linia;
         if (!getline(wejscie, linia)) break;
         stringstream ss(linia);
@@ -124,11 +119,10 @@ void wczytaj_zapisz_do_pliku(const string& plik_we, const string& plik_wy, int w
         if (!getline(wejscie, linia)) break;
         M = stoi(linia);
 
-        // Wykonanie odpowiedniej wersji algorytmu
+        wersja_1(tab, M);
+        wersja_2(tab, M);
 
-        // Przechwyæ wyniki z odpowiedniej wersji algorytmu
-        stringstream wynik_stream;
-        streambuf* poprzedni_bufor = cout.rdbuf(wynik_stream.rdbuf()); // Przekierowanie cout do strumienia
+
 /*
         if (wersja == 1) {
             wersja_1(tab, M); // Twoja funkcja wersja_1 wypisuje wyniki na ekran
@@ -145,19 +139,14 @@ void wczytaj_zapisz_do_pliku(const string& plik_we, const string& plik_wy, int w
             cout.rdbuf(poprzedni_bufor); // Przywróæ cout
             return;
 */
-            wersja_1(tab, M);
-           // wersja_2(tab, M);
-        cout.rdbuf(poprzedni_bufor); // Przywróæ cout
 
-        // Zapisz wyniki do pliku
-        wyjscie << wynik_stream.str() << endl;
         zestaw_numer++;
     }
 
-    cout << "Wyniki zapisano do pliku: " << plik_wy << endl;
+
 
     wejscie.close();
-    wyjscie.close();
+
 }
 
 
@@ -187,9 +176,9 @@ void testy_wersji_2() {
 
 int main()
 {
-    testy_wersji_1();
-    testy_wersji_2();
-    wczytaj_zapisz_do_pliku(plik_wejsciowy, plik_wyjsciowy,1); //wczytanie danych z pliku i zapis do pliku wynikow wersji 1
-    wczytaj_zapisz_do_pliku(plik_wejsciowy, plik_wyjsciowy,2); //wczytanie danych z pliku i zapis do pliku wynikow wersji 2
+    //testy_wersji_1();
+    //testy_wersji_2();
+    wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+
     return 0;
 }
