@@ -10,10 +10,43 @@ string plik_wejsciowy = "dane.txt";
 string plik_wyjsciowy = "wyniki.txt";
 
 
-void wersja_1(vector<int>tab, int M) {
+void wyswietl_wyniki_i_zapisz(vector<vector<int>>wyniki, int l_trojek, int wersja, int n) {
+    static bool czy_pliku_czyszczono = false; // Flaga do jednorazowego czyszczenia pliku
+    if (!czy_pliku_czyszczono) {
+        ofstream plik_czyszczenie(plik_wyjsciowy, ios::trunc);
+        plik_czyszczenie.close();
+        czy_pliku_czyszczono = true; // Plik został wyczyszczony
+    }
+
+
+    ofstream plik(plik_wyjsciowy, ios::app);
+        if(plik.is_open()) {
+        cout<< "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
+        plik << "wersja "<<wersja<<": Liczba kombinacji wynosi " << l_trojek <<": ";
+        for(int i=0; i<wyniki.size(); i++) {
+            cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
+            plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
+        }
+        }
+        plik << "\n";
+        cout << endl;
+        plik.close();
+        if(n<3) {
+            cout << "wersja "<<wersja<<": Liczba kombinacji wynosi 0." << endl;
+            ofstream plik(plik_wyjsciowy, ios::app);
+            if (plik.is_open()) {
+                plik<< "wersja "<<wersja<<": Liczba kombinacji wynosi 0." << endl;
+                plik.close();
+            }
+        }
+}
+
+
+void wersja_1(vector<int>tab, int M, bool sprawdz_unikalnosc) {
     vector<vector<int>> wyniki; //wektor przechowywujacy znalezione trojki
     int n = tab.size(); // dlugosc tablicy poczatkowej
     int l_trojek = 0; // zmienna do liczenia wystpien odpowiednich trojek
+    int wersja = 1;
 
     if (n >=3) {
         for(int i=0; i<n-2; i++) {
@@ -22,6 +55,7 @@ void wersja_1(vector<int>tab, int M) {
                     if(tab[i] + tab[j] + tab[k] == M) { // sprawdzamy czy suma danej kombinacji wynosi M
                         vector<int> trojka={tab[i],tab[j], tab[k]};
 
+                        if(sprawdz_unikalnosc) {
                         bool unikalna = true;
                         for(int l=0; l<wyniki.size(); l++) { // sprawdzamy czy aktualna trojka
                             if(wyniki[l] == trojka) {          //  znajduje sie w wynikach
@@ -34,37 +68,23 @@ void wersja_1(vector<int>tab, int M) {
                             wyniki.push_back(trojka); //dodajemy jesli trojka jest unikalna
                             l_trojek++; //
                         }
+                    } else {
+                        wyniki.push_back(trojka);
+                        l_trojek++;
+                    }
                     }
                 }
             }
         }
-
-    ofstream plik(plik_wyjsciowy, ios::app);
-    if(plik.is_open()) {
-    cout<< "wersja 1: Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
-    plik << "wersja 1: Liczba kombinacji wynosi " << l_trojek <<": ";
-    for(int i=0; i<wyniki.size(); i++) {
-        cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
-        plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
-    }
-    }
-    plik << "\n";
-    cout << endl;
-    plik.close();
-    } else {
-        cout << "wersja 1: Liczba kombinacji wynosi 0." << endl;
-        ofstream plik(plik_wyjsciowy, ios::app);
-        if (plik.is_open()) {
-            plik << "wersja 1: Liczba kombinacji wynosi 0." << endl;
-            plik.close();
-        }
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja, n);
     }
 }
 
-void wersja_2(vector<int>tab, int M) {
+void wersja_2(vector<int>tab, int M, bool sprawdz_unikalnosc) {
     vector<vector<int>> wyniki;
     int n = tab.size();
     int l_trojek = 0;
+    int wersja = 2;
 
     if (n >=3) {
         for(int i=0; i<n-1; i++) {
@@ -76,6 +96,7 @@ void wersja_2(vector<int>tab, int M) {
                 if(widziane.find(x) != widziane.end()) {
                     vector<int> trojka = {tab[i], x, tab[j]};
 
+                    if(sprawdz_unikalnosc) {
 
                     bool unikalna = true;
                     for(int l=0; l<wyniki.size(); l++) { // sprawdzamy czy aktualna trojka
@@ -89,34 +110,16 @@ void wersja_2(vector<int>tab, int M) {
                         wyniki.push_back(trojka); //dodajemy jesli trojka jest unikalna
                         l_trojek++; //
                     }
+                    } else {
+                        wyniki.push_back(trojka);
+                        l_trojek++;
+                    }
                 }
                 widziane.insert(tab[j]);
             }
         }
-        ofstream plik(plik_wyjsciowy, ios::app);
-        if(plik.is_open()) {
-
-        cout<< "wersja 2: Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
-        plik << "wersja 2: Liczba kombinacji wynosi " << l_trojek <<": ";
-
-        for(int i=0; i<wyniki.size(); i++) {
-            cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
-            plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
-
-        }
-        plik << "\n";
-        cout << endl;
-        plik.close();
-    } else {
-        cout << "wersja 2: Liczba kombinacji wynosi 0." << endl;
-        ofstream plik(plik_wyjsciowy, ios::app);
-        if (plik.is_open()) {
-            plik << "wersja 2: Liczba kombinacji wynosi 0." << endl;
-            plik.close();
-        }
+    wyswietl_wyniki_i_zapisz(wyniki, l_trojek, wersja,n);
     }
-}
-
 }
 
 void wczytaj_z_pliku(string plik_wejsciowy) {
@@ -146,15 +149,18 @@ void wczytaj_z_pliku(string plik_wejsciowy) {
         // Wczytaj wartosc M
         if (!getline(wejscie, linia)) break;
         M = stoi(linia);
-
-        wersja_1(tab, M);
-        wersja_2(tab, M);
+        bool sprawdz_unikalnosc=false;
+        wersja_1(tab, M, sprawdz_unikalnosc);
+        wersja_2(tab, M, sprawdz_unikalnosc);
 
         zestaw_numer++;
     }
     wejscie.close();
 
 }
+
+
+
 
 
 //Dane do testowania
@@ -167,25 +173,27 @@ int M=6;
 
 //Funkcja testujaca wersje 1 algorytmu
 void testy_wersji_1() {
-    wersja_1(tab1, M);
-    wersja_1(tab2, M);
-    wersja_1(tab3, M);
-    wersja_1(tab4, M);
+    bool sprawdz_unikalnosc=true;
+    wersja_1(tab1, M, sprawdz_unikalnosc);
+    wersja_1(tab2, M, sprawdz_unikalnosc);
+    wersja_1(tab3, M, sprawdz_unikalnosc);
+    wersja_1(tab4, M, sprawdz_unikalnosc);
 }
 
 //Funkcja testujaca wersje 2 algorytmu
 void testy_wersji_2() {
-    wersja_2(tab1, M);
-    wersja_2(tab2, M);
-    wersja_2(tab3, M);
-    wersja_2(tab4, M);
+    bool sprawdz_unikalnosc=true;
+    wersja_2(tab1, M, sprawdz_unikalnosc);
+    wersja_2(tab2, M, sprawdz_unikalnosc);
+    wersja_2(tab3, M, sprawdz_unikalnosc);
+    wersja_2(tab4, M, sprawdz_unikalnosc);
 }
 
 int main()
 {
-    //testy_wersji_1();
-    //testy_wersji_2();
-    wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
+    testy_wersji_1();
+    testy_wersji_2();
+    //wczytaj_z_pliku(plik_wejsciowy); //wczytanie danych z pliku
 
     return 0;
 }
