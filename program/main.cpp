@@ -6,6 +6,10 @@
 
 using namespace std;
 
+string plik_wejsciowy = "dane.txt";
+string plik_wyjsciowy = "wyniki.txt";
+
+
 void wersja_1(vector<int>tab, int M) {
     vector<vector<int>> wyniki; //wektor przechowywujacy znalezione trojki
     int n = tab.size(); // dlugosc tablicy poczatkowej
@@ -34,15 +38,27 @@ void wersja_1(vector<int>tab, int M) {
                 }
             }
         }
+
+    ofstream plik(plik_wyjsciowy, ios::app);
+    if(plik.is_open()) {
     cout<< "wersja 1: Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
+    plik << "wersja 1: Liczba kombinacji wynosi " << l_trojek <<": ";
     for(int i=0; i<wyniki.size(); i++) {
         cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
+        plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
     }
+    }
+    plik << "\n";
     cout << endl;
+    plik.close();
     } else {
         cout << "wersja 1: Liczba kombinacji wynosi 0." << endl;
+        ofstream plik(plik_wyjsciowy, ios::app);
+        if (plik.is_open()) {
+            plik << "wersja 1: Liczba kombinacji wynosi 0." << endl;
+            plik.close();
+        }
     }
-
 }
 
 void wersja_2(vector<int>tab, int M) {
@@ -77,19 +93,31 @@ void wersja_2(vector<int>tab, int M) {
                 widziane.insert(tab[j]);
             }
         }
+        ofstream plik(plik_wyjsciowy, ios::app);
+        if(plik.is_open()) {
 
         cout<< "wersja 2: Liczba kombinacji wynosi " << l_trojek <<": "; //wyswietlamy wyniki
+        plik << "wersja 2: Liczba kombinacji wynosi " << l_trojek <<": ";
+
         for(int i=0; i<wyniki.size(); i++) {
             cout <<"["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
+            plik << "["<< wyniki[i][0] <<" "<< wyniki[i][1]<< " " << wyniki[i][2] << "] ";
+
         }
+        plik << "\n";
         cout << endl;
+        plik.close();
     } else {
         cout << "wersja 2: Liczba kombinacji wynosi 0." << endl;
+        ofstream plik(plik_wyjsciowy, ios::app);
+        if (plik.is_open()) {
+            plik << "wersja 2: Liczba kombinacji wynosi 0." << endl;
+            plik.close();
+        }
     }
 }
 
-string plik_wejsciowy = "dane.txt";
-string plik_wyjsciowy = "wyniki.txt";
+}
 
 void wczytaj_z_pliku(string plik_wejsciowy) {
     ifstream wejscie(plik_wejsciowy);
@@ -100,7 +128,7 @@ void wczytaj_z_pliku(string plik_wejsciowy) {
     }
 
     vector<int> tab; // Tablica do przechowywania liczb
-    int M;           // Wartoœæ
+    int M;           // Wartosc
     int zestaw_numer = 1;
 
     while (true) {
@@ -115,36 +143,15 @@ void wczytaj_z_pliku(string plik_wejsciowy) {
             tab.push_back(liczba);
         }
 
-        // Wczytaj wartoœæ M
+        // Wczytaj wartosc M
         if (!getline(wejscie, linia)) break;
         M = stoi(linia);
 
         wersja_1(tab, M);
         wersja_2(tab, M);
 
-
-/*
-        if (wersja == 1) {
-            wersja_1(tab, M); // Twoja funkcja wersja_1 wypisuje wyniki na ekran
-        } else if (wersja == 2) {
-            wersja_2(tab, M); // Twoja funkcja wersja_2 wypisuje wyniki na ekran
-        } else {
-            cerr << "Nieprawid³owa wersja algorytmu: " << wersja << endl;
-            cout.rdbuf(poprzedni_bufor); // Przywróæ cout
-            return;
-        }
-
-            wersja_1(tab, M);
-            wersja_2(tab, M);
-            cout.rdbuf(poprzedni_bufor); // Przywróæ cout
-            return;
-*/
-
         zestaw_numer++;
     }
-
-
-
     wejscie.close();
 
 }
